@@ -2,11 +2,8 @@ package main
 
 import (
 	"flag"
-	//"fmt"
 	"github.com/Marneus68/gvp/config"
 	"github.com/Marneus68/gvp/spooler"
-	"github.com/Marneus68/utils"
-	"log"
 )
 
 var outDir string
@@ -33,14 +30,5 @@ func init() {
 
 func main() {
 	flag.Parse()
-	/*
-		fmt.Println(outputDir)
-		fmt.Println(port)
-	*/
-	valid, normalPort := utils.IsValidPortString(port)
-	if !valid {
-		log.Fatal("Invalid port string")
-	}
-	con := config.NewConfig(outDir, normalPort, mail, destMail, sendMail, smtp, smtpName, smtpPwd)
-	spooler.Start(con)
+	spooler.Start(config.NewConfig(outDir, port, mail, destMail, sendMail, smtp, smtpName, smtpPwd))
 }
