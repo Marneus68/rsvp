@@ -17,6 +17,8 @@ var smtp string
 var smtpName string
 var smtpPwd string
 
+var timeout int
+
 func init() {
 	flag.StringVar(&outDir, "o", "~/gvp_tray", "output directory")
 	flag.StringVar(&port, "p", ":9100", "port gvp listens on")
@@ -26,9 +28,10 @@ func init() {
 	flag.StringVar(&smtp, "sa", "mail.cock.li:587", "smtp server and port")
 	flag.StringVar(&smtpName, "su", "username@domail.tld", "smtp user name")
 	flag.StringVar(&smtpPwd, "sp", "password", "smtp user password")
+	flag.IntVar(&timeout, "t", 5, "timeout in seconds")
 }
 
 func main() {
 	flag.Parse()
-	spooler.Start(config.NewConfig(outDir, port, mail, destMail, sendMail, smtp, smtpName, smtpPwd))
+	spooler.Start(config.NewConfig(outDir, port, mail, destMail, sendMail, smtp, smtpName, smtpPwd, timeout))
 }

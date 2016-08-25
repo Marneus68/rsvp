@@ -11,6 +11,8 @@ type Config struct {
 	Smtp     string
 	SmtpName string
 	SmtpPwd  string
+
+	Timeout int
 }
 
 // Constructor for the config struct
@@ -23,6 +25,7 @@ func NewConfig(
 	smtp string,
 	smtpName string,
 	smtpPwd string,
+	timeout int,
 ) *Config {
 	c := new(Config)
 	c.OutDir = outDir
@@ -33,5 +36,6 @@ func NewConfig(
 	c.Smtp = smtp
 	c.SmtpName = smtpName
 	c.SmtpPwd = smtpPwd
+	c.Timeout = timeout
 	return c
 }
