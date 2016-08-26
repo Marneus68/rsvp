@@ -49,7 +49,7 @@ func spool(con *config.Config, conn net.Conn) {
 	content := []byte("")
 	for scanner.Scan() {
 		log.Println("    " + scanner.Text())
-		content = append(content, []byte(scanner.Text())...)
+		content = append(content, []byte(scanner.Text()+"\n")...)
 	}
 
 	ioutil.WriteFile(
