@@ -32,9 +32,10 @@ func Start(con *config.Config) {
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		go spool(con, conn, ps2pdf.Convert, func(dest) {
+		go spool(con, conn, ps2pdf.Convert, func(dest string) {
 			if con.Mail == true {
-				// Send mail
+				log.Println(dest)
+				// TODO: Send mail
 			}
 		})
 	}
@@ -56,19 +57,17 @@ func spool(
 		log.Println(err.Error())
 	}
 	ts := time.Now().Format(time.UnixDate)
-	//bs, err := bufio.NewReader(conn).ReadBytes(io.EOF)
 	scanner := bufio.NewScanner(conn)
 	content := []byte("")
 	for scanner.Scan() {
-		log.Println("    " + scanner.Text())
 		content = append(content, []byte(scanner.Text()+"\n")...)
 	}
 
 	out := utils.SubstituteHomeDir(con.OutDir) + string(filepath.Separator) + ts
-	outPdl := out + ".pdl"
+	pdl := out + ".pdl"
 
 	ioutil.WriteFile(
-		outPdl,
+		pdl,
 		[]byte(content),
 		0777,
 	)
@@ -77,7 +76,8 @@ func spool(
 		log.Println(err.Error())
 	}
 
+	log.Println("Created temporary file in " + pdl)
 	if psFun != nil {
-		psFun(outPdl, utils.SubstituteHomeDir(con.OutDir), mailFun)
+		psFun(pdl, utils.SubstituteHomeDir(con.OutDir), mailFun)
 	}
 }
