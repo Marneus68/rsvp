@@ -31,13 +31,19 @@ func Start(con *config.Config) {
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		go spool(con, conn)
+		go spool(con, conn, nil)
 	}
 }
 
-func spool(con *config.Config, conn net.Conn) {
-	defer log.Println("Connection closed.")
-	defer conn.Close()
+func spool(
+	con *config.Config,
+	conn net.Conn,
+	fun func(string, string, *config.Config),
+) {
+	defer func() {
+		log.Println("Connection closed.")
+		conn.Close()
+	}()
 	log.Print("New incomming connection...")
 	err := conn.SetReadDeadline(time.Now().Add(time.Duration(con.Timeout) * time.Second))
 	if err != nil {
@@ -52,13 +58,20 @@ func spool(con *config.Config, conn net.Conn) {
 		content = append(content, []byte(scanner.Text()+"\n")...)
 	}
 
+	out := utils.SubstituteHomeDir(con.OutDir) + string(filepath.Separator) + ts
+	outPdl := out + ".pdl"
+
 	ioutil.WriteFile(
-		utils.SubstituteHomeDir(con.OutDir)+string(filepath.Separator)+ts+".pdl",
+		outPdl,
 		[]byte(content),
 		0777,
 	)
 
 	if err := scanner.Err(); err != nil {
 		log.Print(err.Error())
+	}
+
+	if fun != nil {
+		fun(outPdl, utils.SubstituteHomeDir(con.OutDir), con)
 	}
 }
