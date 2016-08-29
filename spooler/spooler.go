@@ -3,6 +3,7 @@ package spooler
 import (
 	"bufio"
 	"github.com/Marneus68/gvp/config"
+	"github.com/Marneus68/gvp/ps2pdf"
 	"github.com/Marneus68/utils"
 	"io/ioutil"
 	"log"
@@ -31,20 +32,25 @@ func Start(con *config.Config) {
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		go spool(con, conn, nil)
+		go spool(con, conn, ps2pdf.Convert, func(dest) {
+			if con.Mail == true {
+				// Send mail
+			}
+		})
 	}
 }
 
 func spool(
 	con *config.Config,
 	conn net.Conn,
-	fun func(string, string, *config.Config),
+	psFun func(string, string, func(string)),
+	mailFun func(string),
 ) {
 	defer func() {
 		log.Println("Connection closed.")
 		conn.Close()
 	}()
-	log.Print("New incomming connection...")
+	log.Println("New incomming connection...")
 	err := conn.SetReadDeadline(time.Now().Add(time.Duration(con.Timeout) * time.Second))
 	if err != nil {
 		log.Println(err.Error())
@@ -68,10 +74,10 @@ func spool(
 	)
 
 	if err := scanner.Err(); err != nil {
-		log.Print(err.Error())
+		log.Println(err.Error())
 	}
 
-	if fun != nil {
-		fun(outPdl, utils.SubstituteHomeDir(con.OutDir), con)
+	if psFun != nil {
+		psFun(outPdl, utils.SubstituteHomeDir(con.OutDir), mailFun)
 	}
 }
