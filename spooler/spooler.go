@@ -2,8 +2,8 @@ package spooler
 
 import (
 	"bufio"
-	"github.com/Marneus68/gvp/config"
-	"github.com/Marneus68/gvp/ps2pdf"
+	"github.com/Marneus68/rsvp/config"
+	"github.com/Marneus68/rsvp/ps2pdf"
 	"github.com/Marneus68/utils"
 	"io/ioutil"
 	"log"
