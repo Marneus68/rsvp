@@ -63,17 +63,21 @@ func spool(
 		content = append(content, []byte(scanner.Text()+"\n")...)
 	}
 
-	out := utils.SubstituteHomeDir(con.OutDir) + string(filepath.Separator) + ts
-	pdl := out + ".pdl"
-
-	ioutil.WriteFile(
-		pdl,
-		[]byte(content),
-		0777,
-	)
-
 	if err := scanner.Err(); err != nil {
 		log.Println(err.Error())
+	}
+
+	out := utils.SubstituteHomeDir(con.OutDir) + string(filepath.Separator) + ts
+	pdl := filepath.FromSlash(filepath.Clean(out + ".pdl"))
+
+	err = ioutil.WriteFile(
+		pdl,
+		[]byte(content),
+		0666,
+	)
+	if err != nil {
+		log.Println(err.Error())
+		return
 	}
 
 	log.Println("Created temporary file in " + pdl)

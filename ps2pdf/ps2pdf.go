@@ -23,7 +23,7 @@ func Convert(
 	fn := filepath.Base(inPath)
 	sfn := fn[:len(fn)-len(filepath.Ext(fn))]
 	// create the output path
-	outPath := filepath.Join(outDir, sfn) + ".pdf"
+	outPath := filepath.Clean(filepath.Join(outDir, sfn) + ".pdf")
 
 	// prepare the pdf's graphic context
 	pdf := draw2dpdf.NewPdf("P", "mm", "A4")
