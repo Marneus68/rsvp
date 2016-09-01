@@ -35,7 +35,7 @@ func Start(con *config.Config) {
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		go spool(con, conn, ps2pdf.Convert, func(dest string) {
+		go spool(con, conn, ps2pdf.Convert, func(atc string) {
 			if con.Mail == true {
 
 				smtps := strings.Split(con.Smtp, ":")
@@ -52,8 +52,8 @@ func Start(con *config.Config) {
 				m.SetHeader("From", con.SendMail)
 				m.SetHeader("To", con.DestMail)
 				m.SetHeader("Subject", "New print received on your virtual printer")
-				m.SetBody("text/html", "Hello <b>Bob</b> and <i>Cora</i>!")
-				m.Attach("/home/Alex/lolcat.jpg")
+				m.SetBody("text/plain", "A new print job has been received on your rsvp instance.\n\nThis job has been sent from "+conn.RemoteAddr().String()+" on "+conn.RemoteAddr().Network()+"\n\n"+"The print is attached to this mail.")
+				m.Attach(atc)
 
 				d := gomail.NewDialer(smtps[0], smtpp, con.SmtpName, con.SmtpPwd)
 
