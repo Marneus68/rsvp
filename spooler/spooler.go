@@ -5,11 +5,14 @@ import (
 	"github.com/Marneus68/rsvp/config"
 	"github.com/Marneus68/rsvp/ps2pdf"
 	"github.com/Marneus68/utils"
+	"github.com/go-gomail/gomail"
 	"io/ioutil"
 	"log"
 	"net"
 	"os"
 	"path/filepath"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -34,8 +37,30 @@ func Start(con *config.Config) {
 		}
 		go spool(con, conn, ps2pdf.Convert, func(dest string) {
 			if con.Mail == true {
-				log.Println(dest)
-				// TODO: Send mail
+
+				smtps := strings.Split(con.Smtp, ":")
+				if len(smtps) != 2 {
+					log.Println("Invalid smtp string format")
+				}
+
+				smtpp, err := strconv.Atoi(smtps[1])
+				if err != nil {
+					log.Println(err.Error())
+				}
+
+				m := gomail.NewMessage()
+				m.SetHeader("From", con.SendMail)
+				m.SetHeader("To", con.DestMail)
+				m.SetHeader("Subject", "New print received on your virtual printer")
+				m.SetBody("text/html", "Hello <b>Bob</b> and <i>Cora</i>!")
+				m.Attach("/home/Alex/lolcat.jpg")
+
+				d := gomail.NewDialer(smtps[0], smtpp, con.SmtpName, con.SmtpPwd)
+
+				// Send the email
+				if err := d.DialAndSend(m); err != nil {
+					log.Println(err.Error())
+				}
 			}
 		})
 	}

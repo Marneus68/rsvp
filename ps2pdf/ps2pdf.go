@@ -37,7 +37,7 @@ func Convert(
 	draw2dpdf.SaveToPdfFile(outPath, pdf)
 
 	if endCb != nil {
-		endCb(inPath[:len(inPath)-len(filepath.Ext(inPath))])
+		endCb(outPath)
 	}
 }
 
