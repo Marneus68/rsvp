@@ -1,6 +1,6 @@
 # rsvp
 
-`rsvp` is a really simple virtual network printer. It will attempt to print everything that is sent to its open port (6100 by default) as a pdf and can optionally send you the resulting print via email.
+`rsvp` is a really simple virtual network printer. It will attempt to print everything that is sent to its open port (9100 by default) as a pdf and can optionally send you the resulting print via email.
 
 ## Usage
 
