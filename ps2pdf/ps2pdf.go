@@ -32,9 +32,11 @@ func Convert(
 	DrawPsInGc(gc, inPath)
 	//gc.Restore()
 
-	log.Println("New PDF file will be created at " + outPath)
+	if err := draw2dpdf.SaveToPdfFile(outPath, pdf); err != nil {
+		log.Println(err.Error())
+	}
 
-	draw2dpdf.SaveToPdfFile(outPath, pdf)
+	log.Println("New PDF file created at " + outPath)
 
 	if endCb != nil {
 		endCb(outPath)
