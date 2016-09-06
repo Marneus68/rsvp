@@ -29,8 +29,15 @@ func Convert(
 	pdf := draw2dpdf.NewPdf("P", "mm", "A4")
 	gc := draw2dpdf.NewGraphicContext(pdf)
 
+	gc.Save()
+
+	gc.Translate(0, 200)
+	gc.Scale(0.35, -0.35)
+	gc.Translate(70, -200)
+
 	DrawPsInGc(gc, inPath)
-	//gc.Restore()
+
+	gc.Restore()
 
 	if err := draw2dpdf.SaveToPdfFile(outPath, pdf); err != nil {
 		log.Println(err.Error())
