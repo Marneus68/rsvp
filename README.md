@@ -25,6 +25,14 @@ The `rsvp` executable expects parmeters to function, you can see all the possibl
       -t int
             timeout in seconds (default 5)
 
+Unless specified otherwise during the invokation, the content to be printed as well as the pdf prints will be stored in two subdirectories of `~/rsvp` at the date at which they were received:
+
+    rsvp/
+    ├── pdf
+    │   └── Thu Sep  8 09:46:43 CEST 2016.pdf
+    └── pdl
+        └── Thu Sep  8 09:46:43 CEST 2016.pdl
+
 ### Examples
 
 The following set of parameters will start `rsvp` on the 9800 port and instruct it to store its output in `~/output`:
