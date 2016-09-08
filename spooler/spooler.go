@@ -16,6 +16,12 @@ import (
 	"time"
 )
 
+var PDF_DIR string = "pdf"
+var PDL_DIR string = "pdl"
+
+var pdlOut string
+var pdfOut string
+
 func Start(con *config.Config) {
 	// Create the output directory
 	err := os.MkdirAll(utils.SubstituteHomeDir(con.OutDir), 0777)
@@ -26,6 +32,13 @@ func Start(con *config.Config) {
 			log.Panic(err.Error())
 		}
 	}
+
+	pdlOut = filepath.Join(utils.SubstituteHomeDir(con.OutDir), PDL_DIR)
+	pdfOut = filepath.Join(utils.SubstituteHomeDir(con.OutDir), PDF_DIR)
+
+	os.MkdirAll(pdlOut, 0777)
+	os.MkdirAll(pdfOut, 0777)
+
 	ln, err := net.Listen("tcp", con.Port)
 	if err != nil {
 		log.Fatal(err.Error())
@@ -92,8 +105,9 @@ func spool(
 		log.Println(err.Error())
 	}
 
-	out := utils.SubstituteHomeDir(con.OutDir) + string(filepath.Separator) + ts
-	pdl := filepath.FromSlash(filepath.Clean(out + ".pdl"))
+	pdlOut := filepath.Join(pdlOut, ts)
+
+	pdl := filepath.FromSlash(filepath.Clean(pdlOut + ".pdl"))
 
 	err = ioutil.WriteFile(
 		pdl,
@@ -107,6 +121,6 @@ func spool(
 
 	log.Println("Created temporary file in " + pdl)
 	if psFun != nil {
-		psFun(pdl, utils.SubstituteHomeDir(con.OutDir), mailFun)
+		psFun(pdl, pdfOut, mailFun)
 	}
 }
