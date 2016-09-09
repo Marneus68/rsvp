@@ -59,7 +59,9 @@ This will take care of the dependencies and install `rsvp` in your `$GPATH/bin` 
 
 ## TODOs
 
-A proper PDL language should be implemented at some point. I'll have to get my hands on "standard" network printers for that.
+
+ - A proper PDL language should be implemented at some point. I'll have to get my hands on "standard" network printers for that.
+ - Validate incomming connection's content to avoid print blank pacges when the input isn't valid postscript.
 
 ## License
 
